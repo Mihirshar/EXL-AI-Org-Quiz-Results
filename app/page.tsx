@@ -75,8 +75,10 @@ function GameContent() {
   }, [setCurrentPlayer, updateCurrentPlayerAvatar]);
 
   const handleStart = useCallback(() => {
+    setVariantIndices(generateVariantIndicesForSet(questionSet));
+    setDisplayOrder(generateDisplayOrderForSet(questionSet));
     setPhase('game');
-  }, []);
+  }, [questionSet]);
 
   const handleChoice = useCallback((choice: 'A' | 'B') => {
     setCurrentSelectedChoice(choice);

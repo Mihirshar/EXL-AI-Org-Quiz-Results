@@ -421,12 +421,15 @@ export default function ResultScreen({ scores, choices, userAvatarUrl, stockStat
               >
                 Certificate
               </button>
+              <button
+                onClick={() => setShowKnowledgeGraph(true)}
+                className="btn-secondary text-sm py-2 px-4"
+              >
+                Knowledge Graph
+              </button>
               {hasMultiplePlayers && (
-                <button
-                  onClick={() => setShowKnowledgeGraph(true)}
-                  className="btn-secondary text-sm py-2 px-4"
-                >
-                  Knowledge Graph
+                <button onClick={onViewDashboard} className="btn-secondary text-sm py-2 px-4">
+                  Analytics
                 </button>
               )}
             </motion.div>
