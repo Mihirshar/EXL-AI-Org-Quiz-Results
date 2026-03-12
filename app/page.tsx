@@ -355,6 +355,10 @@ function GameContent() {
                   scores={scores}
                   choices={choices}
                   userAvatarUrl={currentPlayer?.avatarUrl || currentPlayer?.photoUrl}
+                  stockState={stockState}
+                  choiceRecords={choiceRecords}
+                  tickerSymbol={currentPlayer?.tickerSymbol}
+                  questionSet={questionSet}
                   onReset={handleReset}
                   onViewDashboard={handleViewDashboard}
                 />
