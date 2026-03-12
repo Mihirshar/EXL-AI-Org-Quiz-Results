@@ -317,7 +317,11 @@ function GameContent() {
 
             {phase === 'intro' && (
               <motion.div key="intro" {...contentTransition} className="h-full">
-                <IntroScreen onStart={handleStart} />
+                <IntroScreen 
+                  onStart={handleStart} 
+                  questionSet={questionSet} 
+                  onQuestionSetChange={setQuestionSet} 
+                />
               </motion.div>
             )}
 

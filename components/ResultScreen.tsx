@@ -113,6 +113,7 @@ export default function ResultScreen({ scores, choices, userAvatarUrl, stockStat
 
   const hasMultiplePlayers = players.length > 1;
   const [showCertificate, setShowCertificate] = useState(false);
+  const [showKnowledgeGraph, setShowKnowledgeGraph] = useState(false);
   const { fireSuccess, fireStars } = useConfetti();
 
   useEffect(() => {
@@ -421,8 +422,11 @@ export default function ResultScreen({ scores, choices, userAvatarUrl, stockStat
                 Certificate
               </button>
               {hasMultiplePlayers && (
-                <button onClick={onViewDashboard} className="btn-secondary text-sm py-2 px-4">
-                  Analytics
+                <button
+                  onClick={() => setShowKnowledgeGraph(true)}
+                  className="btn-secondary text-sm py-2 px-4"
+                >
+                  Knowledge Graph
                 </button>
               )}
             </motion.div>
@@ -492,6 +496,39 @@ export default function ResultScreen({ scores, choices, userAvatarUrl, stockStat
             avatarUrl={userAvatarUrl}
             onClose={() => setShowCertificate(false)}
           />
+        )}
+      </AnimatePresence>
+
+      {/* Knowledge Graph Overlay */}
+      <AnimatePresence>
+        {showKnowledgeGraph && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/90 flex flex-col items-center justify-center px-4 py-6"
+          >
+            <div className="w-full max-w-6xl mb-4 flex justify-between items-center">
+              <p className="text-white/70 text-sm md:text-base font-medium">
+                EXL AI Conclave: The Knowledge Graph of Enterprise Consequence
+              </p>
+              <button
+                onClick={() => setShowKnowledgeGraph(false)}
+                className="text-white/70 hover:text-white text-sm px-3 py-1 rounded border border-white/30 hover:border-white transition-colors"
+              >
+                Close
+              </button>
+            </div>
+            <div className="relative w-full max-w-6xl aspect-[16/9] rounded-xl overflow-hidden border border-white/20 bg-black">
+              <Image
+                src="/knowledge-graph-enterprise-consequence.png"
+                alt="Knowledge Graph of Enterprise Consequence"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
