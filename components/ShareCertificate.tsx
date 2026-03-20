@@ -91,19 +91,22 @@ export default function ShareCertificate({
       >
         {/* Responsive wrapper using CSS scale to fit mobile screens */}
         <div
-          className="origin-top flex justify-center"
+          className="origin-top flex justify-center shrink-0"
           style={{
             transform: `scale(min(1, calc((100vw - 32px) / 640)))`,
             marginBottom: `calc(-400px * (1 - min(1, calc((100vw - 32px) / 640))))`,
-            width: '640px'
+            width: '640px',
+            minWidth: '640px'
           }}
         >
           {/* Certificate - Fixed 640x400 (8:5) - ALL INLINE STYLES for html2canvas */}
           <div
             ref={certificateRef}
+            className="shrink-0"
             style={{
               position: 'relative',
               width: '640px',
+              minWidth: '640px',
               height: '400px',
               backgroundColor: '#FFFFFF',
               borderRadius: '12px',
