@@ -666,6 +666,9 @@ export const LEVELS_SET_B: Level[] = [
 // Keep LEVELS as an alias for backward compatibility (defaults to Set A)
 export const LEVELS = LEVELS_SET_A;
 
+// SET C - Third standalone set based on "Leader Game 3rd Option" content
+export const LEVELS_SET_C: Level[] = LEVELS_SET_A;
+
 export const TOTAL_LEVELS = LEVELS_SET_A.length;
 
 // Helper function to get a random variant index (0-4) for display variety
@@ -1373,22 +1376,39 @@ export function getTickerResult(levelId: number, choice: ChoiceOption, questionS
 
 // Randomly select which question set to use for a game session
 export function selectRandomSet(): QuestionSet {
-  return Math.random() < 0.5 ? 'A' : 'B';
+  const roll = Math.random();
+  if (roll < 1 / 3) return 'A';
+  if (roll < 2 / 3) return 'B';
+  return 'C';
+}
+
+function toTwoOptionLevel(level: Level): Level {
+  return {
+    ...level,
+    choices: { A: level.choices.A, B: level.choices.B },
+    scoring: { A: level.scoring.A, B: level.scoring.B },
+    insights: { A: level.insights.A, B: level.insights.B },
+    infographics: { A: level.infographics.A, B: level.infographics.B },
+  };
 }
 
 // Get levels for the specified question set
 export function getLevels(questionSet: QuestionSet): Level[] {
-  return questionSet === 'A' ? LEVELS_SET_A : LEVELS_SET_B;
+  if (questionSet === 'B') return LEVELS_SET_B;
+  if (questionSet === 'C') return LEVELS_SET_C;
+  return LEVELS_SET_A.map(toTwoOptionLevel);
 }
 
 // Get ticker results for the specified question set
 export function getTickerResults(questionSet: QuestionSet): Record<number, { A: TickerResult; B: TickerResult; C?: TickerResult }> {
-  return questionSet === 'A' ? TICKER_RESULTS_SET_A : TICKER_RESULTS_SET_B;
+  if (questionSet === 'B') return TICKER_RESULTS_SET_B;
+  return TICKER_RESULTS_SET_A;
 }
 
 // Get choice infographics for the specified question set
 export function getChoiceInfographics(questionSet: QuestionSet): Record<number, { A: ChoiceInfographic; B: ChoiceInfographic; C?: ChoiceInfographic }> {
-  return questionSet === 'A' ? CHOICE_INFOGRAPHICS_SET_A : CHOICE_INFOGRAPHICS_SET_B;
+  if (questionSet === 'B') return CHOICE_INFOGRAPHICS_SET_B;
+  return CHOICE_INFOGRAPHICS_SET_A;
 }
 
 // Calculate scores using the specified question set

@@ -166,9 +166,20 @@ export default function IntroScreen({ onStart, questionSet, onQuestionSetChange 
             >
               Set B
             </button>
+            <button
+              type="button"
+              onClick={() => onQuestionSetChange('C')}
+              className={`px-4 py-2 text-sm rounded-lg transition-all ${
+                questionSet === 'C'
+                  ? 'bg-exl-orange text-white shadow-[0_0_20px_rgba(242,101,34,0.4)]'
+                  : 'text-white/60 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              Set C
+            </button>
           </div>
           <p className="text-white/35 text-xs mt-2">
-            Set A: Gartner / cultural shift focus · Set B: Team building / PBM Audit focus
+            Set A: Gartner / cultural shift focus · Set B: Team building / PBM Audit focus · Set C: 3-option executive blind-spot scenario set
           </p>
         </motion.div>
 

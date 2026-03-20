@@ -110,5 +110,5 @@ export interface ChoiceRecord {
   priceAfter: number;
 }
 
-// Question Set type - 'A' for original questions, 'B' for alternative questions
-export type QuestionSet = 'A' | 'B';
+// Question Set type - A/B existing sets, C is the third standalone set
+export type QuestionSet = 'A' | 'B' | 'C';

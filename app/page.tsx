@@ -22,7 +22,6 @@ import {
   INITIAL_STOCK, 
   calculateStockState, 
   getTickerResult,
-  selectRandomSet,
   getLevels,
   getChoiceInfographics,
   calculateScoresForSet,
@@ -50,8 +49,8 @@ function GameContent() {
   const [finalArchetype, setFinalArchetype] = useState<Archetype | null>(null);
   const [currentSelectedChoice, setCurrentSelectedChoice] = useState<ChoiceOption | null>(null);
   
-  // Question Set - randomly selected at game start, persists for entire session
-  const [questionSet, setQuestionSet] = useState<QuestionSet>(() => selectRandomSet());
+  // Question Set selected at intro screen
+  const [questionSet, setQuestionSet] = useState<QuestionSet>('A');
   
   // Derived data based on question set
   const levels = getLevels(questionSet);
@@ -196,8 +195,7 @@ function GameContent() {
   }, []);
 
   const handleReset = useCallback(() => {
-    // Select a new random question set for the new game
-    const newQuestionSet = selectRandomSet();
+    const newQuestionSet: QuestionSet = 'A';
     setQuestionSet(newQuestionSet);
     
     setPhase('registration');
