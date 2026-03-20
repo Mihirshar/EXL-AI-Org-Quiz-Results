@@ -76,6 +76,42 @@ export default function InsightReveal({
             </p>
             <p className="text-white/80 leading-snug text-sm">{insight.second}</p>
           </div>
+
+          {/* Extra details — diagnosis / hidden connection / outcome */}
+          {(insight.diagnosis || insight.hiddenConnection || insight.outcome) && (
+            <>
+              <div className="h-px bg-border" />
+              <div className="grid grid-cols-1 gap-2">
+                {insight.diagnosis && (
+                  <div className="flex items-start gap-2">
+                    <span className="text-xs mt-0.5">🧭</span>
+                    <div>
+                      <p className="text-white/30 font-mono text-[9px] uppercase tracking-wider">Diagnosis</p>
+                      <p className={`text-xs font-medium ${colors.text}`}>{insight.diagnosis}</p>
+                    </div>
+                  </div>
+                )}
+                {insight.hiddenConnection && (
+                  <div className="flex items-start gap-2">
+                    <span className="text-xs mt-0.5">🔗</span>
+                    <div>
+                      <p className="text-white/30 font-mono text-[9px] uppercase tracking-wider">Hidden Connection</p>
+                      <p className={`text-xs font-medium ${colors.text}`}>{insight.hiddenConnection}</p>
+                    </div>
+                  </div>
+                )}
+                {insight.outcome && (
+                  <div className="flex items-start gap-2">
+                    <span className="text-xs mt-0.5">🎯</span>
+                    <div>
+                      <p className="text-white/30 font-mono text-[9px] uppercase tracking-wider">Outcome</p>
+                      <p className={`text-xs font-bold ${colors.text}`}>{insight.outcome}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
