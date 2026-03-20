@@ -475,7 +475,6 @@ export default function ResultScreen({ scores, choices, userAvatarUrl, stockStat
             </div>
           </motion.div>
         )}
-        )}
       </div>
 
       {/* Mobile-only Floating Certificate Button */}
