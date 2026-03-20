@@ -30,7 +30,8 @@ import {
   Level as GameLevel,
 } from '@/lib/gameData';
 import { determineArchetype, Archetype } from '@/lib/archetypes';
-import { Level, StockState, ChoiceRecord, QuestionSet, ChoiceOption } from '@/lib/types';
+import { Level, StockState, ChoiceRecord, QuestionSet, ChoiceOption, Player } from '@/lib/types';
+import { savePlayerToFirestore } from '@/lib/db';
 
 type Phase = 'registration' | 'intro' | 'game' | 'calculating' | 'result' | 'dashboard';
 
@@ -170,18 +171,24 @@ function GameContent() {
     const archetype = determineArchetype(finalScores);
 
     if (currentPlayer) {
-      addPlayer({
+      const newPlayer: Player = {
         id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         name: currentPlayer.name,
         level: currentPlayer.level,
+        companyName: currentPlayer.companyName,
+        tickerSymbol: currentPlayer.tickerSymbol,
         scores: finalScores,
         archetype: archetype.id,
         selfArchetypeId: currentPlayer.selfArchetypeId,
         choices: choices,
+        questionSet: questionSet,
         completedAt: new Date(),
         photoUrl: currentPlayer.photoUrl,
         avatarUrl: currentPlayer.avatarUrl,
-      });
+      };
+
+      addPlayer(newPlayer);
+      savePlayerToFirestore(newPlayer).catch(err => console.error("Failed to save to Firestore", err));
     }
 
     setPhase('result');

@@ -6,6 +6,10 @@ import ArchetypeBarChart from './charts/ArchetypeBarChart';
 import LevelBarChart from './charts/LevelBarChart';
 import Leaderboard from './charts/Leaderboard';
 import { usePlayerContext } from '@/lib/playerContext';
+import { useState, useEffect, useMemo } from 'react';
+import { Player, LevelStats, ArchetypeStats } from '@/lib/types';
+import { getAllPlayersFromFirestore } from '@/lib/db';
+import { ARCHETYPES } from '@/lib/archetypes';
 
 interface AnalyticsDashboardProps {
   onBack: () => void;
@@ -13,18 +17,80 @@ interface AnalyticsDashboardProps {
 }
 
 export default function AnalyticsDashboard({ onBack, onPlayAgain }: AnalyticsDashboardProps) {
-  const { players, getLevelStats, getArchetypeStats, getLeaderboard } = usePlayerContext();
+  const { players: sessionPlayers } = usePlayerContext();
+  const [dbPlayers, setDbPlayers] = useState<Player[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const levelStats = getLevelStats();
-  const archetypeStats = getArchetypeStats();
-  const leaderboard = getLeaderboard();
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const data = await getAllPlayersFromFirestore();
+        setDbPlayers(data as Player[]);
+      } catch (err) {
+        console.error("Failed to load players from Firestore", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadData();
+  }, []);
 
-  const totalPlayers = players.length;
+  // Merge session players with DB players (avoiding duplicates by id)
+  const allPlayers = useMemo(() => {
+    const map = new Map<string, Player>();
+    dbPlayers.forEach(p => map.set(p.id, p));
+    sessionPlayers.forEach(p => map.set(p.id, p));
+    return Array.from(map.values());
+  }, [dbPlayers, sessionPlayers]);
+
+  const levelStats: LevelStats[] = useMemo(() => {
+    const stats: Record<string, any> = {};
+    allPlayers.forEach(p => {
+      if (!stats[p.level]) {
+        stats[p.level] = { level: p.level, count: 0, totalTV: 0, totalOR: 0, totalIV: 0, totalHR: 0 };
+      }
+      stats[p.level].count += 1;
+      stats[p.level].totalTV += p.scores.TV;
+      stats[p.level].totalOR += p.scores.OR;
+      stats[p.level].totalIV += p.scores.IV;
+      stats[p.level].totalHR += p.scores.HR;
+    });
+
+    return Object.values(stats).map(s => ({
+      level: s.level,
+      playerCount: s.count,
+      avgTV: Math.round(s.totalTV / s.count),
+      avgOR: Math.round(s.totalOR / s.count),
+      avgIV: Math.round(s.totalIV / s.count),
+      avgHR: Math.round(s.totalHR / s.count),
+    }));
+  }, [allPlayers]);
+
+  const archetypeStats: ArchetypeStats[] = useMemo(() => {
+    const counts: Record<string, number> = {};
+    allPlayers.forEach(p => {
+      counts[p.archetype] = (counts[p.archetype] || 0) + 1;
+    });
+    return Object.entries(counts).map(([id, count]) => {
+      const arch = ARCHETYPES.find(a => a.id === id);
+      return {
+        name: arch ? arch.name : id,
+        count,
+        color: arch ? arch.color : '#666666'
+      };
+    }).sort((a, b) => b.count - a.count);
+  }, [allPlayers]);
+
+  const leaderboard = useMemo(() => {
+    return [...allPlayers].sort((a, b) => b.scores.TV - a.scores.TV);
+  }, [allPlayers]);
+
+  const totalPlayers = allPlayers.length;
   const avgTV = totalPlayers > 0
-    ? Math.round(players.reduce((sum, p) => sum + p.scores.TV, 0) / totalPlayers)
+    ? Math.round(allPlayers.reduce((sum, p) => sum + p.scores.TV, 0) / totalPlayers)
     : 0;
   const successRate = totalPlayers > 0
-    ? Math.round((players.filter((p) => p.scores.TV > 35 && p.scores.OR < 40 && p.scores.HR > 0).length / totalPlayers) * 100)
+    ? Math.round((allPlayers.filter((p) => p.scores.TV > 35 && p.scores.OR < 40 && p.scores.HR > 0).length / totalPlayers) * 100)
     : 0;
 
   const containerVariants = {
@@ -130,9 +196,13 @@ export default function AnalyticsDashboard({ onBack, onPlayAgain }: AnalyticsDas
         {/* Footer */}
         <motion.div
           variants={itemVariants}
-          className="text-center mt-8 pb-8 text-white/30 text-sm"
+          className="text-center mt-8 pb-8 text-white/30 text-sm flex items-center justify-center gap-2"
         >
-          Data is session-based and will reset when the page is closed
+          {isLoading ? (
+            <span className="animate-pulse">Syncing complete data from cloud...</span>
+          ) : (
+            <span>Live aggregated data across all organizations and sessions</span>
+          )}
         </motion.div>
       </div>
     </motion.div>

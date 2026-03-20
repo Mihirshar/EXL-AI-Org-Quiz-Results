@@ -25,10 +25,13 @@ export interface Player {
   id: string;
   name: string;
   level: Level;
+  companyName?: string;
+  tickerSymbol?: string;
   scores: Scores;
   archetype: string;
   selfArchetypeId?: string;
   choices: ChoiceOption[];
+  questionSet?: string;
   completedAt: Date;
   photoUrl?: string;
   avatarUrl?: string;
@@ -50,10 +53,10 @@ export function generateTickerSymbol(companyName: string): string {
   if (!companyName || companyName.trim().length === 0) {
     return DEFAULT_TICKERS[Math.floor(Math.random() * DEFAULT_TICKERS.length)];
   }
-  
+
   const name = companyName.trim().toUpperCase();
   const words = name.split(/\s+/).filter(w => w.length > 0);
-  
+
   if (words.length === 1) {
     const word = words[0];
     if (word.length <= 4) {
@@ -65,11 +68,11 @@ export function generateTickerSymbol(companyName: string): string {
     }
     return word.slice(0, 4);
   }
-  
+
   if (words.length === 2) {
     return (words[0].slice(0, 2) + words[1].slice(0, 2)).slice(0, 4);
   }
-  
+
   return words.map(w => w[0]).join('').slice(0, 4);
 }
 
