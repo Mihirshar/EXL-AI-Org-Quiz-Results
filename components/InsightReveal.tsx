@@ -2,9 +2,10 @@
 
 import { motion } from 'framer-motion';
 import { Insight } from '@/lib/gameData';
+import { ChoiceOption } from '@/lib/types';
 
 interface InsightRevealProps {
-  choice: 'A' | 'B';
+  choice: ChoiceOption;
   insight: Insight;
   onNext: () => void;
   onRepeat?: () => void;
@@ -32,6 +33,12 @@ export default function InsightReveal({
       border: 'border-purple-400/40',
       text: 'text-purple-400',
       icon: '📈',
+    },
+    C: {
+      bg: 'bg-amber-500/10',
+      border: 'border-amber-400/40',
+      text: 'text-amber-400',
+      icon: '⚠️',
     },
   };
 

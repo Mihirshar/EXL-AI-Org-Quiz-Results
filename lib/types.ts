@@ -5,6 +5,8 @@ export interface Scores {
   TV: number;
 }
 
+export type ChoiceOption = 'A' | 'B' | 'C';
+
 export const LEVELS = [
   'Board Member',
   'Leadership',
@@ -26,7 +28,7 @@ export interface Player {
   scores: Scores;
   archetype: string;
   selfArchetypeId?: string;
-  choices: ('A' | 'B')[];
+  choices: ChoiceOption[];
   completedAt: Date;
   photoUrl?: string;
   avatarUrl?: string;
@@ -102,7 +104,7 @@ export interface StockState {
 
 export interface ChoiceRecord {
   level: number;
-  choice: 'A' | 'B';
+  choice: ChoiceOption;
   choiceLabel: string;
   tickerResult: TickerResult;
   priceAfter: number;

@@ -2,12 +2,12 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { getLevels, getChoiceInfographics, ChoiceInfographic, Level } from '@/lib/gameData';
-import { QuestionSet } from '@/lib/types';
+import { QuestionSet, ChoiceOption } from '@/lib/types';
 
 interface InfographicSidebarProps {
   currentLevelIndex: number;
-  choices: ('A' | 'B')[];
-  selectedChoice: 'A' | 'B' | null;
+  choices: ChoiceOption[];
+  selectedChoice: ChoiceOption | null;
   questionSet?: QuestionSet;
 }
 
@@ -138,7 +138,7 @@ function InfographicCard({ data, levelIndex }: { data: ChoiceInfographic; levelI
   );
 }
 
-function ChoiceHistory({ choices, questionSet = 'A' }: { choices: ('A' | 'B')[]; questionSet?: QuestionSet }) {
+function ChoiceHistory({ choices, questionSet = 'A' }: { choices: ChoiceOption[]; questionSet?: QuestionSet }) {
   if (choices.length === 0) return null;
 
   const choiceInfographics = getChoiceInfographics(questionSet);
@@ -153,13 +153,13 @@ function ChoiceHistory({ choices, questionSet = 'A' }: { choices: ('A' | 'B')[];
             key={index}
             className={`
               flex items-center gap-1 px-2 py-1 rounded-full border border-white/10
-              ${choice === 'A' ? 'bg-blue-500/10' : 'bg-purple-500/10'}
+              ${choice === 'A' ? 'bg-blue-500/10' : choice === 'B' ? 'bg-purple-500/10' : 'bg-amber-500/10'}
             `}
           >
             <span className="text-[9px]">{info?.qualityIcon || '?'}</span>
             <span className={`
               text-[10px] font-bold
-              ${choice === 'A' ? 'text-blue-400' : 'text-purple-400'}
+              ${choice === 'A' ? 'text-blue-400' : choice === 'B' ? 'text-purple-400' : 'text-amber-400'}
             `}>
               {choice}
             </span>
@@ -188,7 +188,7 @@ function WaitingState({ levelTitle }: { levelTitle: string }) {
       </motion.div>
       <p className="text-white/50 text-sm mb-1">Make your selection</p>
       <p className="text-white/30 text-xs">
-        Choose A or B for <span className="text-exl-orange">{levelTitle}</span>
+        Choose your strategy for <span className="text-exl-orange">{levelTitle}</span>
       </p>
     </motion.div>
   );

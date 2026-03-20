@@ -4,11 +4,12 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Archetype } from '@/lib/archetypes';
 import { Scores } from '@/lib/gameData';
+import { ChoiceOption } from '@/lib/types';
 
 interface StrategicAdviceProps {
   archetype: Archetype;
   scores: Scores;
-  choices: ('A' | 'B')[];
+  choices: ChoiceOption[];
   playerName: string;
   isWinner: boolean;
 }

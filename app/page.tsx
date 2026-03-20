@@ -31,7 +31,7 @@ import {
   Level as GameLevel,
 } from '@/lib/gameData';
 import { determineArchetype, Archetype } from '@/lib/archetypes';
-import { Level, StockState, ChoiceRecord, QuestionSet } from '@/lib/types';
+import { Level, StockState, ChoiceRecord, QuestionSet, ChoiceOption } from '@/lib/types';
 
 type Phase = 'registration' | 'intro' | 'game' | 'calculating' | 'result' | 'dashboard';
 
@@ -45,10 +45,10 @@ const contentTransition = {
 function GameContent() {
   const [phase, setPhase] = useState<Phase>('registration');
   const [currentLevel, setCurrentLevel] = useState(0);
-  const [choices, setChoices] = useState<('A' | 'B')[]>([]);
+  const [choices, setChoices] = useState<ChoiceOption[]>([]);
   const [scores, setScores] = useState<Scores>(INITIAL_SCORES);
   const [finalArchetype, setFinalArchetype] = useState<Archetype | null>(null);
-  const [currentSelectedChoice, setCurrentSelectedChoice] = useState<'A' | 'B' | null>(null);
+  const [currentSelectedChoice, setCurrentSelectedChoice] = useState<ChoiceOption | null>(null);
   
   // Question Set - randomly selected at game start, persists for entire session
   const [questionSet, setQuestionSet] = useState<QuestionSet>(() => selectRandomSet());
@@ -57,8 +57,8 @@ function GameContent() {
   const levels = getLevels(questionSet);
   const choiceInfographics = getChoiceInfographics(questionSet);
   
-  const [variantIndices, setVariantIndices] = useState<{ A: number; B: number }[]>(() => generateVariantIndicesForSet(questionSet));
-  const [displayOrder, setDisplayOrder] = useState<('A' | 'B')[][]>(() => generateDisplayOrderForSet(questionSet));
+  const [variantIndices, setVariantIndices] = useState<{ A: number; B: number; C: number }[]>(() => generateVariantIndicesForSet(questionSet));
+  const [displayOrder, setDisplayOrder] = useState<ChoiceOption[][]>(() => generateDisplayOrderForSet(questionSet));
   const [showTicker, setShowTicker] = useState(true);
   const [stockState, setStockState] = useState<StockState>(INITIAL_STOCK);
   const [choiceRecords, setChoiceRecords] = useState<ChoiceRecord[]>([]);
@@ -80,7 +80,7 @@ function GameContent() {
     setPhase('game');
   }, [questionSet]);
 
-  const handleChoice = useCallback((choice: 'A' | 'B') => {
+  const handleChoice = useCallback((choice: ChoiceOption) => {
     setCurrentSelectedChoice(choice);
     
     // Immediately update stock price when option is selected
@@ -134,7 +134,7 @@ function GameContent() {
       // Randomize display order for the next level
       setDisplayOrder(prev => {
         const newOrder = [...prev];
-        newOrder[nextLevel] = generateSingleDisplayOrder();
+        newOrder[nextLevel] = generateSingleDisplayOrder(levels[nextLevel]);
         return newOrder;
       });
     } else {
@@ -159,7 +159,7 @@ function GameContent() {
       // Randomize display order for the level we're going back to
       setDisplayOrder(prev => {
         const newOrder = [...prev];
-        newOrder[prevLevel] = generateSingleDisplayOrder();
+        newOrder[prevLevel] = generateSingleDisplayOrder(levels[prevLevel]);
         return newOrder;
       });
     }

@@ -5,15 +5,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ChoiceCard from './ChoiceCard';
 import InsightReveal from './InsightReveal';
 import { Level, TOTAL_LEVELS, Scores, getChoiceText } from '@/lib/gameData';
+import { ChoiceOption } from '@/lib/types';
 
 interface GameScreenProps {
   level: Level;
   currentLevelIndex: number;
   scores: Scores;
-  selectedChoice: 'A' | 'B' | null;
-  variantIndices: { A: number; B: number };
-  displayOrder: ('A' | 'B')[];
-  onChoice: (choice: 'A' | 'B') => void;
+  selectedChoice: ChoiceOption | null;
+  variantIndices: { A: number; B: number; C: number };
+  displayOrder: ChoiceOption[];
+  onChoice: (choice: ChoiceOption) => void;
   onNext: () => void;
   onUndo?: () => void;
   onReset?: () => void;
@@ -50,7 +51,7 @@ export default function GameScreen({
     }
   }, [selectedChoice, showInsight]);
 
-  const handleChoiceSelect = (choice: 'A' | 'B') => {
+  const handleChoiceSelect = (choice: ChoiceOption) => {
     if (selectedChoice !== null) return;
     onChoice(choice);
   };
@@ -126,12 +127,11 @@ export default function GameScreen({
                 transition={{ duration: 0.3 }}
                 className="space-y-3"
               >
-                {displayOrder.map((actualChoice, displayIndex) => {
-                  const displayLabel = displayIndex === 0 ? 'A' : 'B';
+                {displayOrder.map((actualChoice) => {
                   return (
                     <ChoiceCard
                       key={actualChoice}
-                      choice={displayLabel as 'A' | 'B'}
+                      choice={actualChoice}
                       description={getChoiceText(level, actualChoice, variantIndices[actualChoice])}
                       isSelected={selectedChoice === actualChoice}
                       isDisabled={selectedChoice !== null && selectedChoice !== actualChoice}
@@ -150,7 +150,7 @@ export default function GameScreen({
               >
                 <InsightReveal
                   choice={selectedChoice!}
-                  insight={level.insights[selectedChoice!]}
+                  insight={level.insights[selectedChoice!] || level.insights.A}
                   onNext={handleNext}
                   onRepeat={canUndo ? handleRepeat : undefined}
                   isLastLevel={isLastLevel}

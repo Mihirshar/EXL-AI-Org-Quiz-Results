@@ -1,4 +1,4 @@
-import { TickerResult, StockState, ChoiceRecord, Scores, QuestionSet } from './types';
+import { TickerResult, StockState, ChoiceRecord, Scores, QuestionSet, ChoiceOption } from './types';
 
 export type { Scores };
 
@@ -50,18 +50,22 @@ export interface Level {
   choices: {
     A: string[];  // Array of 5 variants for Option A
     B: string[];  // Array of 5 variants for Option B
+    C?: string[]; // Optional third option (Set A extension)
   };
   scoring: {
     A: ScoreChange;
     B: ScoreChange;
+    C?: ScoreChange;
   };
   insights: {
     A: Insight;
     B: Insight;
+    C?: Insight;
   };
   infographics: {
     A: Infographic[];
     B: Infographic[];
+    C?: Infographic[];
   };
 }
 
@@ -103,10 +107,18 @@ export const LEVELS_SET_A: Level[] = [
         'Adopt a human-centered approach: match every dollar spent on AI tools with equivalent investment in employee upskilling.',
         'Build capabilities alongside technology: allocate equal resources to AI platforms and workforce transformation programs.',
       ],
+      C: [
+        '"The Strategy Paralysis" – Spend 70% of the budget hiring a top-tier Big 4 consulting firm to build a comprehensive, 3-5 year "AI Strategy & Ethics Roadmap" before buying any actual software.',
+        '"The Strategy Paralysis" – Spend 70% of the budget hiring a top-tier Big 4 consulting firm to build a comprehensive, 3-5 year "AI Strategy & Ethics Roadmap" before buying any actual software.',
+        '"The Strategy Paralysis" – Spend 70% of the budget hiring a top-tier Big 4 consulting firm to build a comprehensive, 3-5 year "AI Strategy & Ethics Roadmap" before buying any actual software.',
+        '"The Strategy Paralysis" – Spend 70% of the budget hiring a top-tier Big 4 consulting firm to build a comprehensive, 3-5 year "AI Strategy & Ethics Roadmap" before buying any actual software.',
+        '"The Strategy Paralysis" – Spend 70% of the budget hiring a top-tier Big 4 consulting firm to build a comprehensive, 3-5 year "AI Strategy & Ethics Roadmap" before buying any actual software.',
+      ],
     },
     scoring: {
       A: { IV: 20, OR: 15, HR: -20, TV: -5 },
       B: { IV: 5, OR: -5, HR: 20, TV: 10 },
+      C: { IV: -20, OR: -10, HR: 5, TV: -15 },
     },
     insights: {
       A: {
@@ -116,6 +128,10 @@ export const LEVELS_SET_A: Level[] = [
       B: {
         first: 'The rollout feels frustratingly slow. The board questions the heavy training expenditure in Q1.',
         second: 'By month four, highly literate "fusion teams" autonomously identify high-margin use cases. The foundation for rapid, compounding growth is locked in.',
+      },
+      C: {
+        first: 'The board feels incredibly safe. You have beautiful PowerPoint decks and zero execution risk in Q1.',
+        second: 'You burned 4 months and most of your budget planning for a future that will change in 6 months. You mathematically cannot hit a 40% turnaround in the remaining 8 months.',
       },
     },
     infographics: {
@@ -151,10 +167,18 @@ export const LEVELS_SET_A: Level[] = [
         'Accept a short-term delay to create a specialized AI system that truly understands your domain\'s complexity and compliance needs.',
         'Build it right: dedicate 60 days to training a model on proprietary data with enterprise-grade accuracy safeguards.',
       ],
+      C: [
+        '"The Mega-vendor Suite" – Buy a massive, multi-million dollar "pre-packaged AI" enterprise suite from a legacy vendor. It promises to do everything and requires rewriting your internal processes.',
+        '"The Mega-vendor Suite" – Buy a massive, multi-million dollar "pre-packaged AI" enterprise suite from a legacy vendor. It promises to do everything and requires rewriting your internal processes.',
+        '"The Mega-vendor Suite" – Buy a massive, multi-million dollar "pre-packaged AI" enterprise suite from a legacy vendor. It promises to do everything and requires rewriting your internal processes.',
+        '"The Mega-vendor Suite" – Buy a massive, multi-million dollar "pre-packaged AI" enterprise suite from a legacy vendor. It promises to do everything and requires rewriting your internal processes.',
+        '"The Mega-vendor Suite" – Buy a massive, multi-million dollar "pre-packaged AI" enterprise suite from a legacy vendor. It promises to do everything and requires rewriting your internal processes.',
+      ],
     },
     scoring: {
       A: { IV: 25, OR: 30, HR: -10, TV: 0 },
       B: { IV: -5, OR: -10, HR: 10, TV: 15 },
+      C: { IV: 10, OR: 10, HR: -25, TV: -5 },
     },
     insights: {
       A: {
@@ -164,6 +188,10 @@ export const LEVELS_SET_A: Level[] = [
       B: {
         first: 'You face internal grumbling about delays. Competitors mock your "slow" AI strategy.',
         second: 'Your DSLM achieves 98% accuracy in regulated workflows. Clients consolidate more business with you, generating sticky, high-margin revenue.',
+      },
+      C: {
+        first: 'IT loves having "one throat to choke." Deployment begins systematically.',
+        second: 'The business units revolt. Forcing operations to abandon their workflows to fit the vendor\'s rigid AI model creates massive operational friction and destroys morale.',
       },
     },
     infographics: {
@@ -199,19 +227,31 @@ export const LEVELS_SET_A: Level[] = [
         'Maintain human oversight: scale AI tools that augment workers but never act independently.',
         'Stick with the proven approach: AI suggests, humans decide and execute on every workflow.',
       ],
+      C: [
+        '"The Fragmented Fleet" – Decentralize it. Give every department head a $500k budget to independently buy and deploy their own AI agents to solve their specific departmental bottlenecks quickly.',
+        '"The Fragmented Fleet" – Decentralize it. Give every department head a $500k budget to independently buy and deploy their own AI agents to solve their specific departmental bottlenecks quickly.',
+        '"The Fragmented Fleet" – Decentralize it. Give every department head a $500k budget to independently buy and deploy their own AI agents to solve their specific departmental bottlenecks quickly.',
+        '"The Fragmented Fleet" – Decentralize it. Give every department head a $500k budget to independently buy and deploy their own AI agents to solve their specific departmental bottlenecks quickly.',
+        '"The Fragmented Fleet" – Decentralize it. Give every department head a $500k budget to independently buy and deploy their own AI agents to solve their specific departmental bottlenecks quickly.',
+      ],
     },
     scoring: {
-      A: { IV: 30, OR: 20, HR: -5, TV: 20 },
-      B: { IV: -5, OR: -5, HR: 5, TV: 5 },
+      A: { IV: -5, OR: -5, HR: 5, TV: 5 },
+      B: { IV: 30, OR: 20, HR: -5, TV: 20 },
+      C: { IV: 25, OR: 35, HR: 15, TV: 0 },
     },
     insights: {
       A: {
+        first: 'Operations feel incredibly safe. Output quality is highly consistent.',
+        second: 'You hit a hard ceiling. Copilots yield only incremental 5–10% productivity gains. You mathematically fail to generate the 40% turnaround required.',
+      },
+      B: {
         first: 'Agents instantly clear massive backlogs. Volume processing scales exponentially without adding headcount. Staff feels uneasy about being replaced.',
         second: 'You shift from tracking "productivity" to hard P&L impact. This is the operational leverage required to hit your aggressive financial goals.',
       },
-      B: {
-        first: 'Operations feel incredibly safe. Output quality is highly consistent.',
-        second: 'You hit a hard ceiling. Copilots yield only incremental 5–10% productivity gains. You mathematically fail to generate the 40% turnaround required.',
+      C: {
+        first: 'Department heads are thrilled. Innovation spikes locally, and people love the autonomy.',
+        second: 'You create an enterprise nightmare. None of the agents can talk to each other, data silos deepen, and duplicate vendor costs erase any P&L gains.',
       },
     },
     infographics: {
@@ -247,10 +287,18 @@ export const LEVELS_SET_A: Level[] = [
         'Pump the brakes completely—better to lose momentum than risk catastrophic governance failure.',
         'Shut down AI operations temporarily to build an ironclad governance structure before any further deployment.',
       ],
+      C: [
+        '"The AI Board" – Form a 6-person "AI Ethics & Review Committee" consisting of Legal, HR, and IT. Mandate that every new AI prompt, tool, or workflow must be manually presented to and approved by this committee before use.',
+        '"The AI Board" – Form a 6-person "AI Ethics & Review Committee" consisting of Legal, HR, and IT. Mandate that every new AI prompt, tool, or workflow must be manually presented to and approved by this committee before use.',
+        '"The AI Board" – Form a 6-person "AI Ethics & Review Committee" consisting of Legal, HR, and IT. Mandate that every new AI prompt, tool, or workflow must be manually presented to and approved by this committee before use.',
+        '"The AI Board" – Form a 6-person "AI Ethics & Review Committee" consisting of Legal, HR, and IT. Mandate that every new AI prompt, tool, or workflow must be manually presented to and approved by this committee before use.',
+        '"The AI Board" – Form a 6-person "AI Ethics & Review Committee" consisting of Legal, HR, and IT. Mandate that every new AI prompt, tool, or workflow must be manually presented to and approved by this committee before use.',
+      ],
     },
     scoring: {
       A: { IV: 10, OR: -25, HR: 15, TV: 10 },
       B: { IV: -40, OR: -20, HR: -15, TV: -20 },
+      C: { IV: -30, OR: -15, HR: -25, TV: -10 },
     },
     insights: {
       A: {
@@ -260,6 +308,10 @@ export const LEVELS_SET_A: Level[] = [
       B: {
         first: 'Zero compliance breaches. The board enjoys total peace of mind regarding data leaks.',
         second: 'Complete stagnation. Competitors capture your market share. Your top talent leaves out of frustration, effectively killing the turnaround story.',
+      },
+      C: {
+        first: 'The legal team is extremely happy. Every AI use case is perfectly documented and signed off.',
+        second: 'The review queue stretches to 4 months. Innovators get frustrated by red tape and either quit or resort to "Shadow AI" on personal devices to get work done.',
       },
     },
     infographics: {
@@ -295,10 +347,18 @@ export const LEVELS_SET_A: Level[] = [
         'Build for the future: redesign operations around human-AI collaboration to capture new market opportunities.',
         'Pursue value creation: leverage AI not just for efficiency, but to launch innovative services that generate premium margins.',
       ],
+      C: [
+        '"Innovation Theater" – Declare victory on the initial pilots, issue a massive press release about your AI success, but keep AI contained in an "Innovation Lab." Hesitate to roll out/integrate it into the core, legacy and every other processes.',
+        '"Innovation Theater" – Declare victory on the initial pilots, issue a massive press release about your AI success, but keep AI contained in an "Innovation Lab." Hesitate to roll out/integrate it into the core, legacy and every other processes.',
+        '"Innovation Theater" – Declare victory on the initial pilots, issue a massive press release about your AI success, but keep AI contained in an "Innovation Lab." Hesitate to roll out/integrate it into the core, legacy and every other processes.',
+        '"Innovation Theater" – Declare victory on the initial pilots, issue a massive press release about your AI success, but keep AI contained in an "Innovation Lab." Hesitate to roll out/integrate it into the core, legacy and every other processes.',
+        '"Innovation Theater" – Declare victory on the initial pilots, issue a massive press release about your AI success, but keep AI contained in an "Innovation Lab." Hesitate to roll out/integrate it into the core, legacy and every other processes.',
+      ],
     },
     scoring: {
       A: { IV: 10, OR: 10, HR: -30, TV: 5 },
       B: { IV: 15, OR: 5, HR: 25, TV: 25 },
+      C: { IV: 0, OR: -5, HR: -15, TV: -20 },
     },
     insights: {
       A: {
@@ -308,6 +368,10 @@ export const LEVELS_SET_A: Level[] = [
       B: {
         first: 'Operations are fundamentally rewired, requiring intense executive focus to manage the friction of change.',
         second: 'The workforce is energized by doing higher-value work. You unlock net-new revenue streams, effortlessly blowing past the 40% turnaround target.',
+      },
+      C: {
+        first: 'Great PR. The company wins an industry award for "Forward Thinking." Core operations remain undisrupted.',
+        second: 'It is a facade. By treating AI as a side-project rather than the new core operating model, you failed the turnaround. The legacy business continues to bleed margin to faster competitors.',
       },
     },
     infographics: {
@@ -610,42 +674,51 @@ export function getRandomVariantIndex(): number {
 }
 
 // Helper function to get choice text for a specific variant
-export function getChoiceText(level: Level, choice: 'A' | 'B', variantIndex: number): string {
-  const variants = level.choices[choice];
+export function getChoiceText(level: Level, choice: ChoiceOption, variantIndex: number): string {
+  const variants = level.choices[choice] || level.choices.A;
   // Fallback to first variant if index is out of bounds
   return variants[variantIndex] || variants[0];
 }
 
 // Generate variant indices for all 5 levels (call once when game starts)
-export function generateVariantIndices(): { A: number; B: number }[] {
+export function generateVariantIndices(): { A: number; B: number; C: number }[] {
   return LEVELS.map(() => ({
     A: getRandomVariantIndex(),
     B: getRandomVariantIndex(),
+    C: getRandomVariantIndex(),
   }));
 }
 
 // Generate random display order for each level (shuffles which option appears first)
 // Returns array of tuples where each tuple is the display order ['A', 'B'] or ['B', 'A']
-export function generateDisplayOrder(): ('A' | 'B')[][] {
+export function generateDisplayOrder(): ChoiceOption[][] {
   return LEVELS.map(() => {
-    const shouldSwap = Math.random() < 0.5;
-    return shouldSwap ? ['B', 'A'] : ['A', 'B'];
+    const choices: ChoiceOption[] = ['A', 'B', 'C'];
+    for (let i = choices.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [choices[i], choices[j]] = [choices[j], choices[i]];
+    }
+    return choices;
   });
 }
 
 // Generate a single random display order for one level
-export function generateSingleDisplayOrder(): ('A' | 'B')[] {
-  const shouldSwap = Math.random() < 0.5;
-  return shouldSwap ? ['B', 'A'] : ['A', 'B'];
+export function generateSingleDisplayOrder(level?: Level): ChoiceOption[] {
+  const options: ChoiceOption[] = level?.choices.C ? ['A', 'B', 'C'] : ['A', 'B'];
+  for (let i = options.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [options[i], options[j]] = [options[j], options[i]];
+  }
+  return options;
 }
 
-export function calculateScores(choices: ('A' | 'B')[]): Scores {
+export function calculateScores(choices: ChoiceOption[]): Scores {
   const scores = { ...INITIAL_SCORES };
   
   choices.forEach((choice, index) => {
     const level = LEVELS[index];
     if (level) {
-      const scoreChange = level.scoring[choice];
+      const scoreChange = level.scoring[choice] || level.scoring.A;
       scores.IV += scoreChange.IV;
       scores.OR += scoreChange.OR;
       scores.HR += scoreChange.HR;
@@ -720,7 +793,7 @@ export function getScoreRange(key: ScoreKey): { min: number; max: number } {
 export const MONTH_MARKERS = [1, 4, 7, 10, 12] as const;
 
 // SET A Choice Infographics
-export const CHOICE_INFOGRAPHICS_SET_A: Record<number, { A: ChoiceInfographic; B: ChoiceInfographic }> = {
+export const CHOICE_INFOGRAPHICS_SET_A: Record<number, { A: ChoiceInfographic; B: ChoiceInfographic; C: ChoiceInfographic }> = {
   1: {
     A: {
       headline: 'Technology-First Approach',
@@ -747,6 +820,19 @@ export const CHOICE_INFOGRAPHICS_SET_A: Record<number, { A: ChoiceInfographic; B
       leadershipQuality: 'Strategic Builder',
       qualityIcon: '🏗️',
       theme: 'people',
+    },
+    C: {
+      headline: 'Strategy Paralysis',
+      subheadline: 'Consulting-heavy roadmap before execution',
+      keyStats: [
+        { value: '70%', label: 'Budget → Consulting', trend: 'down' },
+        { value: '4mo', label: 'Execution Delay', trend: 'down' },
+        { value: '-15', label: 'TV Impact', trend: 'down' },
+      ],
+      insight: 'Planning comfort replaces execution velocity, making the turnaround target mathematically unreachable.',
+      leadershipQuality: 'Cautious Planner',
+      qualityIcon: '📋',
+      theme: 'risk',
     },
   },
   2: {
@@ -776,6 +862,19 @@ export const CHOICE_INFOGRAPHICS_SET_A: Record<number, { A: ChoiceInfographic; B
       qualityIcon: '🎯',
       theme: 'balance',
     },
+    C: {
+      headline: 'Mega-vendor Suite',
+      subheadline: 'Pre-packaged platform with rigid process fit',
+      keyStats: [
+        { value: '+10', label: 'OR Increase', trend: 'down' },
+        { value: '-25', label: 'HR Impact', trend: 'down' },
+        { value: '-5', label: 'TV Impact', trend: 'down' },
+      ],
+      insight: 'One-size-fits-all AI creates enterprise friction and morale collapse across business units.',
+      leadershipQuality: 'Vendor Consolidator',
+      qualityIcon: '🏢',
+      theme: 'risk',
+    },
   },
   3: {
     A: {
@@ -802,6 +901,19 @@ export const CHOICE_INFOGRAPHICS_SET_A: Record<number, { A: ChoiceInfographic; B
       insight: 'Copilots yield incremental gains but hit a hard ceiling. You may mathematically fail the 40% turnaround target.',
       leadershipQuality: 'Steady Operator',
       qualityIcon: '🛡️',
+      theme: 'risk',
+    },
+    C: {
+      headline: 'Fragmented Fleet',
+      subheadline: 'Department-level autonomous AI sprawl',
+      keyStats: [
+        { value: '+35', label: 'OR Spike', trend: 'down' },
+        { value: '+25', label: 'IV Burst', trend: 'neutral' },
+        { value: '0', label: 'TV Gain', trend: 'down' },
+      ],
+      insight: 'Local innovation rises, but disconnected agents and duplicated spend erase enterprise value.',
+      leadershipQuality: 'Decentralized Sponsor',
+      qualityIcon: '🧩',
       theme: 'risk',
     },
   },
@@ -832,6 +944,19 @@ export const CHOICE_INFOGRAPHICS_SET_A: Record<number, { A: ChoiceInfographic; B
       qualityIcon: '🛑',
       theme: 'risk',
     },
+    C: {
+      headline: 'AI Review Board',
+      subheadline: 'Manual approvals for every AI workflow',
+      keyStats: [
+        { value: '4mo', label: 'Queue Delay', trend: 'down' },
+        { value: '-30', label: 'IV Collapse', trend: 'down' },
+        { value: '-10', label: 'TV Impact', trend: 'down' },
+      ],
+      insight: 'Bureaucracy creates bottlenecks, fuels shadow AI, and drives away top builders.',
+      leadershipQuality: 'Bureaucratic Guardian',
+      qualityIcon: '🏛️',
+      theme: 'risk',
+    },
   },
   5: {
     A: {
@@ -859,6 +984,19 @@ export const CHOICE_INFOGRAPHICS_SET_A: Record<number, { A: ChoiceInfographic; B
       leadershipQuality: 'Visionary Leader',
       qualityIcon: '👑',
       theme: 'growth',
+    },
+    C: {
+      headline: 'Innovation Theater',
+      subheadline: 'Pilot PR without core operating-model shift',
+      keyStats: [
+        { value: '0.0%', label: 'Ticker Flatline', trend: 'neutral' },
+        { value: '-20', label: 'TV Impact', trend: 'down' },
+        { value: '-15', label: 'HR Impact', trend: 'down' },
+      ],
+      insight: 'Great narrative, weak transformation. AI stays in the lab while core economics keep degrading.',
+      leadershipQuality: 'Narrative Builder',
+      qualityIcon: '🎭',
+      theme: 'risk',
     },
   },
 };
@@ -1018,7 +1156,7 @@ export const INITIAL_STOCK: StockState = {
 };
 
 // SET A Ticker Results
-export const TICKER_RESULTS_SET_A: Record<number, { A: TickerResult; B: TickerResult }> = {
+export const TICKER_RESULTS_SET_A: Record<number, { A: TickerResult; B: TickerResult; C?: TickerResult }> = {
   1: {
     A: {
       type: 'volatile',
@@ -1031,6 +1169,12 @@ export const TICKER_RESULTS_SET_A: Record<number, { A: TickerResult; B: TickerRe
       label: 'Minor Dip',
       percent: -1.0,
       analystNote: 'Q1 capital heavy on training. Street anxious for faster deployment.',
+    },
+    C: {
+      type: 'loss',
+      label: 'Slow Bleed',
+      percent: -2.0,
+      analystNote: 'Heavy consulting spend with no software deployed. Competitors are pulling ahead.',
     },
   },
   2: {
@@ -1046,6 +1190,12 @@ export const TICKER_RESULTS_SET_A: Record<number, { A: TickerResult; B: TickerRe
       percent: 3.0,
       analystNote: 'Proprietary model creating significant operational moat. Margins improving.',
     },
+    C: {
+      type: 'loss',
+      label: 'Volatile',
+      percent: -1.0,
+      analystNote: 'Mega-vendor contract signed, but internal integration friction is leaking to the street.',
+    },
   },
   3: {
     A: {
@@ -1059,6 +1209,12 @@ export const TICKER_RESULTS_SET_A: Record<number, { A: TickerResult; B: TickerRe
       label: 'Stagnation',
       percent: -4.0,
       analystNote: 'Company falling behind competitors adopting autonomous agents. Downgrade.',
+    },
+    C: {
+      type: 'loss',
+      label: 'Correction',
+      percent: -3.5,
+      analystNote: 'Analysts downgrade on reports of fragmented infrastructure and duplicate spending.',
     },
   },
   4: {
@@ -1074,6 +1230,12 @@ export const TICKER_RESULTS_SET_A: Record<number, { A: TickerResult; B: TickerRe
       percent: -12.0,
       analystNote: 'AI program indefinitely paused. Competitors seizing market share. Sell now.',
     },
+    C: {
+      type: 'loss',
+      label: 'Drop',
+      percent: -4.0,
+      analystNote: 'Heavy bureaucracy cited as primary reason for top AI talent exiting the firm.',
+    },
   },
   5: {
     A: {
@@ -1088,11 +1250,17 @@ export const TICKER_RESULTS_SET_A: Record<number, { A: TickerResult; B: TickerRe
       percent: 10.0,
       analystNote: 'Successful pivot to AI-first revenue models. The new industry benchmark.',
     },
+    C: {
+      type: 'volatile',
+      label: 'Flatline',
+      percent: 0.0,
+      analystNote: 'Glossy press releases fail to mask stagnant core revenue. Turnaround classified as incomplete.',
+    },
   },
 };
 
 // SET B Ticker Results (from PDF)
-export const TICKER_RESULTS_SET_B: Record<number, { A: TickerResult; B: TickerResult }> = {
+export const TICKER_RESULTS_SET_B: Record<number, { A: TickerResult; B: TickerResult; C?: TickerResult }> = {
   1: {
     A: {
       type: 'volatile',
@@ -1189,7 +1357,7 @@ export function calculateStockState(choiceRecords: ChoiceRecord[]): StockState {
   };
 }
 
-export function getTickerResult(levelId: number, choice: 'A' | 'B', questionSet: QuestionSet = 'A'): TickerResult {
+export function getTickerResult(levelId: number, choice: ChoiceOption, questionSet: QuestionSet = 'A'): TickerResult {
   const tickerResults = getTickerResults(questionSet);
   return tickerResults[levelId]?.[choice] || {
     type: 'volatile',
@@ -1214,24 +1382,24 @@ export function getLevels(questionSet: QuestionSet): Level[] {
 }
 
 // Get ticker results for the specified question set
-export function getTickerResults(questionSet: QuestionSet): Record<number, { A: TickerResult; B: TickerResult }> {
+export function getTickerResults(questionSet: QuestionSet): Record<number, { A: TickerResult; B: TickerResult; C?: TickerResult }> {
   return questionSet === 'A' ? TICKER_RESULTS_SET_A : TICKER_RESULTS_SET_B;
 }
 
 // Get choice infographics for the specified question set
-export function getChoiceInfographics(questionSet: QuestionSet): Record<number, { A: ChoiceInfographic; B: ChoiceInfographic }> {
+export function getChoiceInfographics(questionSet: QuestionSet): Record<number, { A: ChoiceInfographic; B: ChoiceInfographic; C?: ChoiceInfographic }> {
   return questionSet === 'A' ? CHOICE_INFOGRAPHICS_SET_A : CHOICE_INFOGRAPHICS_SET_B;
 }
 
 // Calculate scores using the specified question set
-export function calculateScoresForSet(choices: ('A' | 'B')[], questionSet: QuestionSet): Scores {
+export function calculateScoresForSet(choices: ChoiceOption[], questionSet: QuestionSet): Scores {
   const scores = { ...INITIAL_SCORES };
   const levels = getLevels(questionSet);
   
   choices.forEach((choice, index) => {
     const level = levels[index];
     if (level) {
-      const scoreChange = level.scoring[choice];
+      const scoreChange = level.scoring[choice] || level.scoring.A;
       scores.IV += scoreChange.IV;
       scores.OR += scoreChange.OR;
       scores.HR += scoreChange.HR;
@@ -1243,19 +1411,17 @@ export function calculateScoresForSet(choices: ('A' | 'B')[], questionSet: Quest
 }
 
 // Generate variant indices for the specified question set
-export function generateVariantIndicesForSet(questionSet: QuestionSet): { A: number; B: number }[] {
+export function generateVariantIndicesForSet(questionSet: QuestionSet): { A: number; B: number; C: number }[] {
   const levels = getLevels(questionSet);
   return levels.map(() => ({
     A: getRandomVariantIndex(),
     B: getRandomVariantIndex(),
+    C: getRandomVariantIndex(),
   }));
 }
 
 // Generate display order for the specified question set
-export function generateDisplayOrderForSet(questionSet: QuestionSet): ('A' | 'B')[][] {
+export function generateDisplayOrderForSet(questionSet: QuestionSet): ChoiceOption[][] {
   const levels = getLevels(questionSet);
-  return levels.map(() => {
-    const shouldSwap = Math.random() < 0.5;
-    return shouldSwap ? ['B', 'A'] : ['A', 'B'];
-  });
+  return levels.map((level) => generateSingleDisplayOrder(level));
 }

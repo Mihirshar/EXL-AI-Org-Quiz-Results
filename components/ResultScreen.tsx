@@ -8,12 +8,12 @@ import { Scores, SCORE_METRICS, getLevels } from '@/lib/gameData';
 import { determineArchetype, isWinningOutcome, ARCHETYPES } from '@/lib/archetypes';
 import { usePlayerContext } from '@/lib/playerContext';
 import { useConfetti } from '@/lib/useConfetti';
-import { StockState, ChoiceRecord, QuestionSet } from '@/lib/types';
+import { StockState, ChoiceRecord, QuestionSet, ChoiceOption } from '@/lib/types';
 import Image from 'next/image';
 
 interface ResultScreenProps {
   scores: Scores;
-  choices: ('A' | 'B')[];
+  choices: ChoiceOption[];
   userAvatarUrl?: string;
   stockState?: StockState;
   choiceRecords?: ChoiceRecord[];

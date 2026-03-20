@@ -1,9 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { ChoiceOption } from '@/lib/types';
 
 interface ChoiceCardProps {
-  choice: 'A' | 'B';
+  choice: ChoiceOption;
   description: string;
   isSelected: boolean;
   isDisabled: boolean;
@@ -28,6 +29,11 @@ export default function ChoiceCard({
       badge: 'bg-purple-500 text-white',
       glow: 'rgba(168,85,247,0.15)',
     },
+    C: {
+      selected: 'from-amber-500/20 to-orange-500/10 border-amber-400 shadow-[0_0_30px_rgba(251,191,36,0.3)]',
+      badge: 'bg-amber-500 text-white',
+      glow: 'rgba(251,191,36,0.15)',
+    },
   };
 
   return (
@@ -36,7 +42,7 @@ export default function ChoiceCard({
       disabled={isDisabled}
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, ease: 'easeOut', delay: choice === 'A' ? 0.1 : 0.15 }}
+      transition={{ duration: 0.25, ease: 'easeOut', delay: choice === 'A' ? 0.1 : choice === 'B' ? 0.15 : 0.2 }}
       whileHover={!isDisabled ? { scale: 1.01, boxShadow: `0 8px 30px ${choiceColors[choice].glow}` } : {}}
       whileTap={!isDisabled ? { scale: 0.99 } : {}}
       className={`
