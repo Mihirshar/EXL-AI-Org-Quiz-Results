@@ -475,7 +475,32 @@ export default function ResultScreen({ scores, choices, userAvatarUrl, stockStat
             </div>
           </motion.div>
         )}
+        )}
       </div>
+
+      {/* Mobile-only Floating Certificate Button */}
+      <AnimatePresence>
+        {!showCertificate && (
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={{ delay: 2.5, type: 'spring', stiffness: 200, damping: 20 }}
+            className="md:hidden fixed bottom-6 left-0 right-0 z-40 px-4 flex justify-center pointer-events-none"
+          >
+            <button
+              onClick={() => {
+                fireStars();
+                setShowCertificate(true);
+              }}
+              className="pointer-events-auto bg-gradient-to-r from-exl-orange to-orange-500 text-white px-6 py-4 rounded-full shadow-[0_0_40px_rgba(242,101,34,0.4)] font-bold flex items-center gap-3 w-full max-w-[300px] justify-center active:scale-95 transition-transform"
+            >
+              <span className="text-xl">🏆</span>
+              <span>Get Your Certificate</span>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Certificate Modal */}
       <AnimatePresence>
