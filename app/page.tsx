@@ -62,6 +62,7 @@ function GameContent() {
   const [stockState, setStockState] = useState<StockState>(INITIAL_STOCK);
   const [choiceRecords, setChoiceRecords] = useState<ChoiceRecord[]>([]);
   const [showEdgeGlow, setShowEdgeGlow] = useState<'gain' | 'loss' | 'volatile' | null>(null);
+  const [mobilePanel, setMobilePanel] = useState<'intel' | 'stock' | null>(null);
 
   const { setCurrentPlayer, addPlayer, currentPlayer, clearCurrentPlayer, updateCurrentPlayerAvatar } = usePlayerContext();
 
@@ -426,6 +427,105 @@ function GameContent() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Mobile Bottom Sheet Overlays — only during game phase */}
+      <AnimatePresence>
+        {showSidebars && mobilePanel !== null && (
+          <motion.div
+            key="mobile-overlay-bg"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setMobilePanel(null)}
+            className="md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showSidebars && mobilePanel === 'intel' && (
+          <motion.div
+            key="mobile-intel"
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            className="md:hidden fixed bottom-0 left-0 right-0 z-50 h-[80vh] bg-background border-t border-border/60 rounded-t-2xl overflow-hidden flex flex-col"
+          >
+            {/* Drag handle */}
+            <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
+              <div className="w-10 h-1 bg-white/20 rounded-full" />
+            </div>
+            <div className="flex-1 overflow-y-auto">
+              <InfographicSidebar
+                currentLevelIndex={currentLevel}
+                choices={choices}
+                selectedChoice={currentSelectedChoice}
+                questionSet={questionSet}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showSidebars && mobilePanel === 'stock' && (
+          <motion.div
+            key="mobile-stock"
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+            className="md:hidden fixed bottom-0 left-0 right-0 z-50 h-[80vh] bg-background border-t border-border/60 rounded-t-2xl overflow-hidden flex flex-col"
+          >
+            {/* Drag handle */}
+            <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
+              <div className="w-10 h-1 bg-white/20 rounded-full" />
+            </div>
+            <div className="flex-1 overflow-y-auto">
+              <TickerSidebar
+                stockState={stockState}
+                choiceRecords={choiceRecords}
+                currentLevelIndex={currentLevel}
+                tickerSymbol={currentPlayer?.tickerSymbol}
+                companyName={currentPlayer?.companyName}
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Floating Bottom Bar — only during game phase */}
+      <AnimatePresence>
+        {showSidebars && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-3 py-2 bg-surface/90 backdrop-blur-md border border-border/60 rounded-full shadow-2xl"
+          >
+            <button
+              onClick={() => setMobilePanel(mobilePanel === 'intel' ? null : 'intel')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${mobilePanel === 'intel'
+                ? 'bg-exl-orange text-white shadow-[0_0_12px_rgba(242,101,34,0.5)]'
+                : 'text-white/60 hover:text-white hover:bg-white/10'
+                }`}
+            >
+              <span>📊</span> Intel
+            </button>
+            <div className="w-px h-4 bg-white/20" />
+            <button
+              onClick={() => setMobilePanel(mobilePanel === 'stock' ? null : 'stock')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${mobilePanel === 'stock'
+                ? 'bg-ticker-gain/20 text-ticker-gain shadow-[0_0_12px_rgba(0,255,136,0.3)]'
+                : 'text-white/60 hover:text-white hover:bg-white/10'
+                }`}
+            >
+              <span>📈</span> ${stockState.price.toFixed(0)}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
