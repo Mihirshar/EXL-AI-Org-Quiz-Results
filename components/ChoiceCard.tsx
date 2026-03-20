@@ -5,6 +5,7 @@ import { ChoiceOption } from '@/lib/types';
 
 interface ChoiceCardProps {
   choice: ChoiceOption;
+  displayLabel?: ChoiceOption; // Visual label shown on badge (defaults to choice)
   description: string;
   isSelected: boolean;
   isDisabled: boolean;
@@ -13,11 +14,13 @@ interface ChoiceCardProps {
 
 export default function ChoiceCard({
   choice,
+  displayLabel,
   description,
   isSelected,
   isDisabled,
   onSelect,
 }: ChoiceCardProps) {
+  const badgeLabel = displayLabel ?? choice;
   const choiceColors = {
     A: {
       selected: 'from-blue-500/20 to-blue-500/10 border-blue-400 shadow-[0_0_30px_rgba(96,165,250,0.3)]',
@@ -42,7 +45,7 @@ export default function ChoiceCard({
       disabled={isDisabled}
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, ease: 'easeOut', delay: choice === 'A' ? 0.1 : choice === 'B' ? 0.15 : 0.2 }}
+      transition={{ duration: 0.25, ease: 'easeOut', delay: badgeLabel === 'A' ? 0.1 : badgeLabel === 'B' ? 0.15 : 0.2 }}
       whileHover={!isDisabled ? { scale: 1.01, boxShadow: `0 8px 30px ${choiceColors[choice].glow}` } : {}}
       whileTap={!isDisabled ? { scale: 0.99 } : {}}
       className={`
@@ -66,7 +69,7 @@ export default function ChoiceCard({
             }
           `}
         >
-          {choice}
+          {badgeLabel}
         </div>
         <div className="flex-1">
           <p className={`text-sm leading-snug ${isSelected ? 'text-white' : 'text-white/70'}`}>

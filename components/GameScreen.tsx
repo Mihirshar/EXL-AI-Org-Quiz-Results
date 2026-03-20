@@ -127,11 +127,14 @@ export default function GameScreen({
                 transition={{ duration: 0.3 }}
                 className="space-y-3"
               >
-                {displayOrder.map((actualChoice) => {
+                {displayOrder.map((actualChoice, posIndex) => {
+                  const positionalLabels: ChoiceOption[] = ['A', 'B', 'C'];
+                  const displayLabel = positionalLabels[posIndex];
                   return (
                     <ChoiceCard
                       key={actualChoice}
                       choice={actualChoice}
+                      displayLabel={displayLabel}
                       description={getChoiceText(level, actualChoice, variantIndices[actualChoice])}
                       isSelected={selectedChoice === actualChoice}
                       isDisabled={selectedChoice !== null && selectedChoice !== actualChoice}
