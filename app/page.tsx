@@ -15,12 +15,12 @@ import StockTicker from '@/components/StockTicker';
 import TickerSidebar from '@/components/TickerSidebar';
 import ArchetypeReveal from '@/components/ArchetypeReveal';
 import EXLLogo from '@/components/EXLLogo';
-import { 
-  INITIAL_SCORES, 
-  Scores, 
-  generateSingleDisplayOrder, 
-  INITIAL_STOCK, 
-  calculateStockState, 
+import {
+  INITIAL_SCORES,
+  Scores,
+  generateSingleDisplayOrder,
+  INITIAL_STOCK,
+  calculateStockState,
   getTickerResult,
   getLevels,
   getChoiceInfographics,
@@ -48,21 +48,21 @@ function GameContent() {
   const [scores, setScores] = useState<Scores>(INITIAL_SCORES);
   const [finalArchetype, setFinalArchetype] = useState<Archetype | null>(null);
   const [currentSelectedChoice, setCurrentSelectedChoice] = useState<ChoiceOption | null>(null);
-  
+
   // Question Set selected at intro screen
-  const [questionSet, setQuestionSet] = useState<QuestionSet>('A');
-  
+  const [questionSet, setQuestionSet] = useState<QuestionSet>('C');
+
   // Derived data based on question set
   const levels = getLevels(questionSet);
   const choiceInfographics = getChoiceInfographics(questionSet);
-  
+
   const [variantIndices, setVariantIndices] = useState<{ A: number; B: number; C: number }[]>(() => generateVariantIndicesForSet(questionSet));
   const [displayOrder, setDisplayOrder] = useState<ChoiceOption[][]>(() => generateDisplayOrderForSet(questionSet));
   const [showTicker, setShowTicker] = useState(true);
   const [stockState, setStockState] = useState<StockState>(INITIAL_STOCK);
   const [choiceRecords, setChoiceRecords] = useState<ChoiceRecord[]>([]);
   const [showEdgeGlow, setShowEdgeGlow] = useState<'gain' | 'loss' | 'volatile' | null>(null);
-  
+
   const { setCurrentPlayer, addPlayer, currentPlayer, clearCurrentPlayer, updateCurrentPlayerAvatar } = usePlayerContext();
 
   const handleRegister = useCallback((name: string, level: Level, companyName?: string, photoUrl?: string, avatarUrl?: string, selfArchetypeId?: string) => {
@@ -81,12 +81,12 @@ function GameContent() {
 
   const handleChoice = useCallback((choice: ChoiceOption) => {
     setCurrentSelectedChoice(choice);
-    
+
     // Immediately update stock price when option is selected
     const level = levels[currentLevel];
     const tickerResult = getTickerResult(level.id, choice, questionSet);
     const choiceInfo = choiceInfographics[level.id]?.[choice];
-    
+
     const previewRecord: ChoiceRecord = {
       level: level.id,
       choice: choice,
@@ -94,21 +94,21 @@ function GameContent() {
       tickerResult,
       priceAfter: 0,
     };
-    
+
     // Calculate from committed records + the preview selection
     const previewRecords = [...choiceRecords, previewRecord];
     const newStockState = calculateStockState(previewRecords);
-    
+
     setStockState(newStockState);
   }, [currentLevel, choiceRecords, levels, questionSet, choiceInfographics]);
 
   const handleNext = useCallback(() => {
     if (currentSelectedChoice === null) return;
-    
+
     const level = levels[currentLevel];
     const tickerResult = getTickerResult(level.id, currentSelectedChoice, questionSet);
     const choiceInfo = choiceInfographics[level.id]?.[currentSelectedChoice];
-    
+
     // Commit the choice record (stock state already updated in handleChoice)
     const newRecord: ChoiceRecord = {
       level: level.id,
@@ -117,16 +117,16 @@ function GameContent() {
       tickerResult,
       priceAfter: stockState.price,
     };
-    
+
     const newRecords = [...choiceRecords, newRecord];
     setChoiceRecords(newRecords);
-    
+
     const newChoices = [...choices, currentSelectedChoice];
     setChoices(newChoices);
     setScores(calculateScoresForSet(newChoices, questionSet));
-    
+
     setCurrentSelectedChoice(null);
-    
+
     if (currentLevel < levels.length - 1) {
       const nextLevel = currentLevel + 1;
       setCurrentLevel(nextLevel);
@@ -167,7 +167,7 @@ function GameContent() {
   const handleCalculationComplete = useCallback(() => {
     const finalScores = calculateScoresForSet(choices, questionSet);
     const archetype = determineArchetype(finalScores);
-    
+
     if (currentPlayer) {
       addPlayer({
         id: `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
@@ -182,7 +182,7 @@ function GameContent() {
         avatarUrl: currentPlayer.avatarUrl,
       });
     }
-    
+
     setPhase('result');
   }, [choices, currentPlayer, addPlayer, questionSet]);
 
@@ -195,9 +195,9 @@ function GameContent() {
   }, []);
 
   const handleReset = useCallback(() => {
-    const newQuestionSet: QuestionSet = 'A';
+    const newQuestionSet: QuestionSet = 'C';
     setQuestionSet(newQuestionSet);
-    
+
     setPhase('registration');
     setCurrentLevel(0);
     setChoices([]);
@@ -223,7 +223,7 @@ function GameContent() {
   return (
     <main className="relative h-screen bg-background overflow-hidden flex flex-col">
       <BackgroundOrbs />
-      
+
       {/* Persistent Header with Timeline */}
       <AnimatePresence>
         {showHeader && (
@@ -237,21 +237,21 @@ function GameContent() {
             <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4">
               <div className="flex items-center justify-between gap-2 md:gap-8">
                 <EXLLogo size="sm" withGlow={false} />
-                
+
                 {/* Ticker - visible on tablet and up during game */}
                 {showTickerInHeader && (
                   <div className="flex-1 max-w-md mx-2 md:mx-4 hidden md:block">
-                    <StockTicker 
-                      stockState={stockState} 
+                    <StockTicker
+                      stockState={stockState}
                       tickerSymbol={currentPlayer?.tickerSymbol}
-                      onFlash={handleTickerFlash} 
+                      onFlash={handleTickerFlash}
                     />
                   </div>
                 )}
-                
+
                 <div className="flex-1 max-w-2xl hidden sm:block">
-                  <MonthTimeline 
-                    currentLevel={currentLevel} 
+                  <MonthTimeline
+                    currentLevel={currentLevel}
                     completedLevels={choices.length}
                     isComplete={phase === 'result' || phase === 'calculating'}
                   />
@@ -265,8 +265,8 @@ function GameContent() {
                   {currentPlayer && (
                     <>
                       {currentPlayer.avatarUrl || currentPlayer.photoUrl ? (
-                        <img 
-                          src={currentPlayer.avatarUrl || currentPlayer.photoUrl} 
+                        <img
+                          src={currentPlayer.avatarUrl || currentPlayer.photoUrl}
                           alt={currentPlayer.name}
                           className="w-8 h-8 rounded-full border border-exl-orange/50"
                         />
@@ -296,7 +296,7 @@ function GameContent() {
               transition={{ duration: 0.4 }}
               className="hidden md:flex flex-shrink-0 w-80 border-r border-border/50 bg-background/50 backdrop-blur-sm overflow-y-auto flex-col"
             >
-              <InfographicSidebar 
+              <InfographicSidebar
                 currentLevelIndex={currentLevel}
                 choices={choices}
                 selectedChoice={currentSelectedChoice}
@@ -317,10 +317,10 @@ function GameContent() {
 
             {phase === 'intro' && (
               <motion.div key="intro" {...contentTransition} className="h-full">
-                <IntroScreen 
-                  onStart={handleStart} 
-                  questionSet={questionSet} 
-                  onQuestionSetChange={setQuestionSet} 
+                <IntroScreen
+                  onStart={handleStart}
+                  questionSet={questionSet}
+                  onQuestionSetChange={setQuestionSet}
                 />
               </motion.div>
             )}
@@ -383,7 +383,7 @@ function GameContent() {
         {/* Right Sidebar - Stock Ticker */}
         <AnimatePresence>
           {showSidebars && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 40 }}
@@ -396,16 +396,16 @@ function GameContent() {
                 className="absolute -left-3 top-4 z-20 w-6 h-12 bg-surface border border-border/50 rounded-l-lg flex items-center justify-center hover:bg-white/10 transition-colors"
                 title={showTicker ? 'Hide ticker' : 'Show ticker'}
               >
-                <svg 
-                  className={`w-4 h-4 text-white/60 transition-transform duration-300 ${showTicker ? '' : 'rotate-180'}`} 
-                  fill="none" 
-                  viewBox="0 0 24 24" 
+                <svg
+                  className={`w-4 h-4 text-white/60 transition-transform duration-300 ${showTicker ? '' : 'rotate-180'}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
-              
+
               {/* Sidebar Content */}
               <aside
                 className={`

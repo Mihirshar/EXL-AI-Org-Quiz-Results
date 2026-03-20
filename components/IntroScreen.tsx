@@ -135,53 +135,6 @@ export default function IntroScreen({ onStart, questionSet, onQuestionSetChange 
           <div className="h-px w-12 bg-gradient-to-l from-transparent to-border" />
         </motion.div>
 
-        {/* Question Set Selection */}
-        <motion.div
-          variants={itemVariants}
-          className="mb-6 md:mb-8"
-        >
-          <p className="text-white/60 text-sm mb-3">
-            Choose which question set you want to play.
-          </p>
-          <div className="inline-flex rounded-xl bg-surface border border-border p-1">
-            <button
-              type="button"
-              onClick={() => onQuestionSetChange('A')}
-              className={`px-4 py-2 text-sm rounded-lg transition-all ${
-                questionSet === 'A'
-                  ? 'bg-exl-orange text-white shadow-[0_0_20px_rgba(242,101,34,0.4)]'
-                  : 'text-white/60 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              Set A
-            </button>
-            <button
-              type="button"
-              onClick={() => onQuestionSetChange('B')}
-              className={`px-4 py-2 text-sm rounded-lg transition-all ${
-                questionSet === 'B'
-                  ? 'bg-exl-orange text-white shadow-[0_0_20px_rgba(242,101,34,0.4)]'
-                  : 'text-white/60 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              Set B
-            </button>
-            <button
-              type="button"
-              onClick={() => onQuestionSetChange('C')}
-              className={`px-4 py-2 text-sm rounded-lg transition-all ${
-                questionSet === 'C'
-                  ? 'bg-exl-orange text-white shadow-[0_0_20px_rgba(242,101,34,0.4)]'
-                  : 'text-white/60 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              Set C
-            </button>
-          </div>
-          <p className="text-white/35 text-xs mt-2">
-            Set A: Gartner / cultural shift focus · Set B: Team building / PBM Audit focus · Set C: 3-option executive blind-spot scenario set
-          </p>
-        </motion.div>
 
         {/* CTA Button */}
         <motion.button
