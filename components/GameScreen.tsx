@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import ChoiceCard from './ChoiceCard';
 import InsightReveal from './InsightReveal';
 import { Level, TOTAL_LEVELS, Scores, getChoiceText } from '@/lib/gameData';
-import { ChoiceOption } from '@/lib/types';
+import { ChoiceOption, StockState } from '@/lib/types';
 
 interface GameScreenProps {
   level: Level;
@@ -14,6 +14,7 @@ interface GameScreenProps {
   selectedChoice: ChoiceOption | null;
   variantIndices: { A: number; B: number; C: number };
   displayOrder: ChoiceOption[];
+  stockState?: StockState;
   onChoice: (choice: ChoiceOption) => void;
   onNext: () => void;
   onUndo?: () => void;
@@ -28,6 +29,7 @@ export default function GameScreen({
   selectedChoice,
   variantIndices,
   displayOrder,
+  stockState,
   onChoice,
   onNext,
   onUndo,
@@ -87,7 +89,7 @@ export default function GameScreen({
             </button>
           )}
         </div>
-        
+
         <p className="text-white/40 text-xs font-mono">
           Decision {currentLevelIndex + 1} of {TOTAL_LEVELS}
         </p>
@@ -154,11 +156,70 @@ export default function GameScreen({
                 <InsightReveal
                   choice={selectedChoice!}
                   insight={level.insights[selectedChoice!] || level.insights.A}
+                  infographics={level.infographics[selectedChoice!] || []}
+                  stockState={stockState}
                   onNext={handleNext}
                   onRepeat={canUndo ? handleRepeat : undefined}
                   isLastLevel={isLastLevel}
                   canRepeat={canUndo}
                 />
+
+                {/* Mobile-only: Intel + Stock shown inline below insight */}
+                <div className="md:hidden mt-4 space-y-3">
+                  {/* Strategic Intel — key stats */}
+                  {(level.infographics[selectedChoice!] || []).length > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 }}
+                      className="rounded-xl border border-white/10 bg-white/5 p-3"
+                    >
+                      <p className="text-white/30 font-mono text-[9px] uppercase tracking-wider mb-2">📊 Strategic Intel</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {(level.infographics[selectedChoice!] || []).map((inf, i) => {
+                          const trendColor = inf.trend === 'up' ? 'text-emerald-400' : inf.trend === 'down' ? 'text-red-400' : 'text-amber-400';
+                          const trendBg = inf.trend === 'up' ? 'bg-emerald-500/10' : inf.trend === 'down' ? 'bg-red-500/10' : 'bg-amber-500/10';
+                          return (
+                            <div key={i} className={`rounded-lg p-2 text-center ${trendBg}`}>
+                              <p className="text-base mb-0.5">{inf.icon}</p>
+                              <p className={`font-mono text-sm font-bold ${trendColor}`}>{inf.stat}</p>
+                              <p className="text-white/40 text-[9px] leading-tight mt-0.5">{inf.title}</p>
+                              <p className="text-white/25 text-[8px] mt-0.5">{inf.source}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Stock ticker */}
+                  {stockState && stockState.history.length > 1 && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.75 }}
+                      className={`rounded-xl border p-3 flex items-center justify-between ${stockState.change >= 0
+                          ? 'border-emerald-500/20 bg-emerald-500/5'
+                          : 'border-red-500/20 bg-red-500/5'
+                        }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-base">{stockState.change >= 0 ? '📈' : '📉'}</span>
+                        <div>
+                          <p className="text-white/30 font-mono text-[9px] uppercase tracking-wider">Market Response</p>
+                          <p className="text-white text-xs font-medium">Stock Price</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-mono text-lg font-bold text-white">${stockState.price.toFixed(2)}</p>
+                        <p className={`font-mono text-xs font-bold ${stockState.change >= 0 ? 'text-emerald-400' : 'text-red-400'
+                          }`}>
+                          {stockState.change >= 0 ? '▲ +' : '▼ '}{stockState.changePercent.toFixed(1)}%
+                        </p>
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

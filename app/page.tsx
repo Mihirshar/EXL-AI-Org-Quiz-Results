@@ -335,6 +335,7 @@ function GameContent() {
                   selectedChoice={currentSelectedChoice}
                   variantIndices={variantIndices[currentLevel]}
                   displayOrder={displayOrder[currentLevel]}
+                  stockState={stockState}
                   onChoice={handleChoice}
                   onNext={handleNext}
                   onUndo={handleUndo}

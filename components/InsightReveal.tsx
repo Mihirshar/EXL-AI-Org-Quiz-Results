@@ -1,12 +1,14 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Insight } from '@/lib/gameData';
-import { ChoiceOption } from '@/lib/types';
+import { Insight, Infographic } from '@/lib/gameData';
+import { ChoiceOption, StockState } from '@/lib/types';
 
 interface InsightRevealProps {
   choice: ChoiceOption;
   insight: Insight;
+  infographics?: Infographic[];
+  stockState?: StockState;
   onNext: () => void;
   onRepeat?: () => void;
   isLastLevel: boolean;
@@ -16,6 +18,8 @@ interface InsightRevealProps {
 export default function InsightReveal({
   choice,
   insight,
+  infographics = [],
+  stockState,
   onNext,
   onRepeat,
   isLastLevel,
