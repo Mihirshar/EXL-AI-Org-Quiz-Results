@@ -12,15 +12,15 @@ interface StockTickerProps {
 
 function Sparkline({ data, color }: { data: number[]; color: string }) {
   if (data.length < 2) return null;
-  
+
   const min = Math.min(...data);
   const max = Math.max(...data);
   const range = max - min || 1;
-  
+
   const width = 80;
   const height = 24;
   const padding = 2;
-  
+
   const points = data.map((value, index) => {
     const x = padding + (index / (data.length - 1)) * (width - padding * 2);
     const y = height - padding - ((value - min) / range) * (height - padding * 2);
@@ -63,11 +63,11 @@ export default function StockTicker({ stockState, tickerSymbol = 'EXLS', onFlash
     if (stockState.price !== prevPriceRef.current) {
       const change = stockState.price - prevPriceRef.current;
       const type = change > 0 ? 'gain' : change < 0 ? 'loss' : 'volatile';
-      
+
       setFlashType(type);
       setShowFlash(true);
       setIsAnimating(true);
-      
+
       if (onFlash) {
         onFlash(type);
       }
@@ -100,8 +100,10 @@ export default function StockTicker({ stockState, tickerSymbol = 'EXLS', onFlash
   }, [stockState.price, onFlash]);
 
   const isPositive = stockState.change >= 0;
-  const color = flashType === 'gain' ? '#00FF88' : flashType === 'loss' ? '#FF3B3B' : '#FFB800';
-  const colorClass = flashType === 'gain' ? 'text-ticker-gain' : flashType === 'loss' ? 'text-ticker-loss' : 'text-ticker-volatile';
+  // Use actual stock direction for colours; flashType only overrides during the animation
+  const activeType = showFlash ? flashType : (isPositive ? 'gain' : 'loss');
+  const color = activeType === 'gain' ? '#00FF88' : activeType === 'loss' ? '#FF3B3B' : '#FFB800';
+  const colorClass = activeType === 'gain' ? 'text-ticker-gain' : activeType === 'loss' ? 'text-ticker-loss' : 'text-ticker-volatile';
 
   return (
     <div className="relative">
@@ -157,11 +159,10 @@ export default function StockTicker({ stockState, tickerSymbol = 'EXLS', onFlash
 
           {/* Change indicator */}
           <motion.div
-            className={`flex items-center gap-0.5 px-1.5 md:px-2 py-0.5 rounded font-mono text-[10px] md:text-xs font-bold ${
-              flashType === 'gain' ? 'bg-ticker-gain/20' : 
-              flashType === 'loss' ? 'bg-ticker-loss/20' : 
-              'bg-ticker-volatile/20'
-            } ${colorClass}`}
+            className={`flex items-center gap-0.5 px-1.5 md:px-2 py-0.5 rounded font-mono text-[10px] md:text-xs font-bold ${flashType === 'gain' ? 'bg-ticker-gain/20' :
+                flashType === 'loss' ? 'bg-ticker-loss/20' :
+                  'bg-ticker-volatile/20'
+              } ${colorClass}`}
             animate={showFlash ? { scale: [1, 1.1, 1] } : {}}
             transition={{ duration: 0.3 }}
           >
