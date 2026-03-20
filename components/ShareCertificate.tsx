@@ -38,7 +38,7 @@ export default function ShareCertificate({
         useCORS: true,
         allowTaint: true,
       });
-      
+
       const link = document.createElement('a');
       link.download = `EXL-AI-Strategy-${playerName.replace(/\s+/g, '-')}.png`;
       link.href = canvas.toDataURL('image/png');
@@ -50,7 +50,7 @@ export default function ShareCertificate({
 
   const handleShare = useCallback(async () => {
     const shareText = `I just completed the EXL AI Org Board Challenge! 🎯\n\nMy Leadership Archetype: ${archetype.name}\n${isWinner ? '✅ Successfully achieved the 12-month transformation!' : '📊 Learned valuable AI strategy insights!'}\n\n#AIStrategy #Leadership #EXL`;
-    
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -87,205 +87,215 @@ export default function ShareCertificate({
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
         onClick={(e) => e.stopPropagation()}
-        style={{ width: '100%', maxWidth: '640px' }}
+        className="flex flex-col items-center w-full max-w-[640px]"
       >
-        {/* Certificate - 5x8 inch ratio (8:5 = 1.6) - ALL INLINE STYLES for html2canvas */}
+        {/* Responsive wrapper using CSS scale to fit mobile screens */}
         <div
-          ref={certificateRef}
-          style={{ 
-            position: 'relative',
-            width: '100%',
-            aspectRatio: '8 / 5',
-            backgroundColor: '#FFFFFF',
-            borderRadius: '12px',
-            overflow: 'hidden',
-            fontFamily: 'system-ui, -apple-system, sans-serif',
+          className="origin-top flex justify-center"
+          style={{
+            transform: `scale(min(1, calc((100vw - 32px) / 640)))`,
+            marginBottom: `calc(-400px * (1 - min(1, calc((100vw - 32px) / 640))))`,
+            width: '640px'
           }}
         >
-          {/* Orange border frame */}
-          <div 
-            style={{ 
-              position: 'absolute',
-              top: '12px',
-              left: '12px',
-              right: '12px',
-              bottom: '12px',
-              border: '2px solid #F26522',
-              borderRadius: '8px',
-              pointerEvents: 'none',
+          {/* Certificate - Fixed 640x400 (8:5) - ALL INLINE STYLES for html2canvas */}
+          <div
+            ref={certificateRef}
+            style={{
+              position: 'relative',
+              width: '640px',
+              height: '400px',
+              backgroundColor: '#FFFFFF',
+              borderRadius: '12px',
+              overflow: 'hidden',
+              fontFamily: 'system-ui, -apple-system, sans-serif',
             }}
-          />
-          
-          {/* Corner accents */}
-          <div style={{ position: 'absolute', top: '20px', left: '20px', width: '24px', height: '24px', borderTop: '3px solid #F26522', borderLeft: '3px solid #F26522' }} />
-          <div style={{ position: 'absolute', top: '20px', right: '20px', width: '24px', height: '24px', borderTop: '3px solid #F26522', borderRight: '3px solid #F26522' }} />
-          <div style={{ position: 'absolute', bottom: '20px', left: '20px', width: '24px', height: '24px', borderBottom: '3px solid #F26522', borderLeft: '3px solid #F26522' }} />
-          <div style={{ position: 'absolute', bottom: '20px', right: '20px', width: '24px', height: '24px', borderBottom: '3px solid #F26522', borderRight: '3px solid #F26522' }} />
+          >
+            {/* Orange border frame */}
+            <div
+              style={{
+                position: 'absolute',
+                top: '12px',
+                left: '12px',
+                right: '12px',
+                bottom: '12px',
+                border: '2px solid #F26522',
+                borderRadius: '8px',
+                pointerEvents: 'none',
+              }}
+            />
 
-          {/* Content */}
-          <div style={{ 
-            position: 'relative', 
-            zIndex: 10, 
-            height: '100%', 
-            display: 'flex', 
-            flexDirection: 'column', 
-            padding: '24px 48px',
-          }}>
-            {/* Header */}
-            <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
-                <span style={{ color: '#F26522', fontWeight: 700, fontSize: '28px', letterSpacing: '-0.02em' }}>EXL</span>
-                <span style={{ color: '#D1D5DB' }}>|</span>
-                <span style={{ color: '#6B7280', fontSize: '14px' }}>AI Strategy Simulation</span>
-              </div>
-              <div style={{ 
-                fontSize: '11px', 
-                fontFamily: 'monospace', 
-                color: '#F26522', 
-                textTransform: 'uppercase', 
-                letterSpacing: '0.2em',
-                fontWeight: 600,
-              }}>
-                {playerLevel || 'Participant'}
-              </div>
-            </div>
+            {/* Corner accents */}
+            <div style={{ position: 'absolute', top: '20px', left: '20px', width: '24px', height: '24px', borderTop: '3px solid #F26522', borderLeft: '3px solid #F26522' }} />
+            <div style={{ position: 'absolute', top: '20px', right: '20px', width: '24px', height: '24px', borderTop: '3px solid #F26522', borderRight: '3px solid #F26522' }} />
+            <div style={{ position: 'absolute', bottom: '20px', left: '20px', width: '24px', height: '24px', borderBottom: '3px solid #F26522', borderLeft: '3px solid #F26522' }} />
+            <div style={{ position: 'absolute', bottom: '20px', right: '20px', width: '24px', height: '24px', borderBottom: '3px solid #F26522', borderRight: '3px solid #F26522' }} />
 
-            {/* Main Content Row */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
-              {/* Avatar */}
-              <div style={{ flexShrink: 0 }}>
-                {avatarUrl ? (
-                  <div 
-                    style={{ 
-                      width: '70px', 
-                      height: '70px', 
-                      borderRadius: '50%', 
-                      border: '3px solid #F26522',
-                      overflow: 'hidden',
+            {/* Content */}
+            <div style={{
+              position: 'relative',
+              zIndex: 10,
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '24px 48px',
+            }}>
+              {/* Header */}
+              <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <span style={{ color: '#F26522', fontWeight: 700, fontSize: '28px', letterSpacing: '-0.02em' }}>EXL</span>
+                  <span style={{ color: '#D1D5DB' }}>|</span>
+                  <span style={{ color: '#6B7280', fontSize: '14px' }}>AI Strategy Simulation</span>
+                </div>
+                <div style={{
+                  fontSize: '11px',
+                  fontFamily: 'monospace',
+                  color: '#F26522',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.2em',
+                  fontWeight: 600,
+                }}>
+                  {playerLevel || 'Participant'}
+                </div>
+              </div>
+
+              {/* Main Content Row */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+                {/* Avatar */}
+                <div style={{ flexShrink: 0 }}>
+                  {avatarUrl ? (
+                    <div
+                      style={{
+                        width: '70px',
+                        height: '70px',
+                        borderRadius: '50%',
+                        border: '3px solid #F26522',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <img src={avatarUrl} alt={playerName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        width: '70px',
+                        height: '70px',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(242, 101, 34, 0.15)',
+                        border: '3px solid #F26522',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <span style={{ fontSize: '28px', fontWeight: 700, color: '#F26522' }}>
+                        {playerName.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Info */}
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: '#9CA3AF', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '2px' }}>
+                    This certifies that
+                  </div>
+                  <div style={{ fontSize: '22px', fontWeight: 700, color: '#111827', marginBottom: '4px' }}>
+                    {playerName}
+                  </div>
+                  <div style={{ color: '#6B7280', fontSize: '12px', lineHeight: 1.4 }}>
+                    has successfully completed the AI Strategy Simulation Exercise
+                    <br />
+                    on {formatDate()}
+                  </div>
+                </div>
+              </div>
+
+              {/* Archetype Box */}
+              <div
+                style={{
+                  backgroundColor: '#F9FAFB',
+                  borderRadius: '10px',
+                  padding: '10px 14px',
+                  border: '1px solid #E5E7EB',
+                  marginBottom: '12px',
+                }}
+              >
+                <div style={{ color: '#9CA3AF', fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>
+                  Leadership Archetype
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{ fontSize: '26px' }}>{archetype.icon}</span>
+                  <div>
+                    <div style={{ fontSize: '16px', fontWeight: 700, color: archetype.color }}>
+                      {archetype.name}
+                    </div>
+                    <div style={{ color: '#6B7280', fontSize: '10px' }}>{archetype.subtitle}</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Scores Grid */}
+              <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
+                {SCORE_METRICS.map((metric) => (
+                  <div
+                    key={metric.key}
+                    style={{
+                      flex: 1,
+                      backgroundColor: '#F9FAFB',
+                      borderRadius: '8px',
+                      padding: '6px 4px',
+                      border: '1px solid #E5E7EB',
+                      textAlign: 'center',
                     }}
                   >
-                    <img src={avatarUrl} alt={playerName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <div style={{ color: '#F26522', fontFamily: 'monospace', fontSize: '10px', fontWeight: 700 }}>
+                      {metric.key}
+                    </div>
+                    <div style={{ color: '#111827', fontSize: '14px', fontWeight: 700 }}>
+                      {scores[metric.key] > 0 ? '+' : ''}{scores[metric.key]}
+                    </div>
                   </div>
-                ) : (
-                  <div 
-                    style={{ 
-                      width: '70px', 
-                      height: '70px', 
-                      borderRadius: '50%', 
-                      backgroundColor: 'rgba(242, 101, 34, 0.15)',
-                      border: '3px solid #F26522',
-                      display: 'flex',
+                ))}
+              </div>
+
+              {/* Status Badge */}
+              <div style={{ textAlign: 'center', marginTop: 'auto' }}>
+                {isWinner ? (
+                  <span
+                    style={{
+                      display: 'inline-flex',
                       alignItems: 'center',
-                      justifyContent: 'center',
+                      gap: '8px',
+                      backgroundColor: 'rgba(34, 197, 94, 0.15)',
+                      border: '1px solid rgba(34, 197, 94, 0.3)',
+                      borderRadius: '20px',
+                      padding: '6px 16px',
                     }}
                   >
-                    <span style={{ fontSize: '28px', fontWeight: 700, color: '#F26522' }}>
-                      {playerName.charAt(0).toUpperCase()}
+                    <span style={{ color: '#16A34A', fontSize: '14px' }}>✓</span>
+                    <span style={{ color: '#16A34A', fontWeight: 600, fontSize: '12px' }}>
+                      Transformation Target Achieved
                     </span>
-                  </div>
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      backgroundColor: '#F3F4F6',
+                      border: '1px solid #E5E7EB',
+                      borderRadius: '20px',
+                      padding: '6px 16px',
+                    }}
+                  >
+                    <span style={{ color: '#6B7280', fontSize: '12px' }}>
+                      Strategy Simulation Completed
+                    </span>
+                  </span>
                 )}
               </div>
-
-              {/* Info */}
-              <div style={{ flex: 1 }}>
-                <div style={{ color: '#9CA3AF', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '2px' }}>
-                  This certifies that
-                </div>
-                <div style={{ fontSize: '22px', fontWeight: 700, color: '#111827', marginBottom: '4px' }}>
-                  {playerName}
-                </div>
-                <div style={{ color: '#6B7280', fontSize: '12px', lineHeight: 1.4 }}>
-                  has successfully completed the AI Strategy Simulation Exercise
-                  <br />
-                  on {formatDate()}
-                </div>
-              </div>
-            </div>
-
-            {/* Archetype Box */}
-            <div 
-              style={{ 
-                backgroundColor: '#F9FAFB', 
-                borderRadius: '10px', 
-                padding: '10px 14px',
-                border: '1px solid #E5E7EB',
-                marginBottom: '12px',
-              }}
-            >
-              <div style={{ color: '#9CA3AF', fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>
-                Leadership Archetype
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '26px' }}>{archetype.icon}</span>
-                <div>
-                  <div style={{ fontSize: '16px', fontWeight: 700, color: archetype.color }}>
-                    {archetype.name}
-                  </div>
-                  <div style={{ color: '#6B7280', fontSize: '10px' }}>{archetype.subtitle}</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Scores Grid */}
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
-              {SCORE_METRICS.map((metric) => (
-                <div 
-                  key={metric.key} 
-                  style={{ 
-                    flex: 1,
-                    backgroundColor: '#F9FAFB', 
-                    borderRadius: '8px', 
-                    padding: '6px 4px',
-                    border: '1px solid #E5E7EB',
-                    textAlign: 'center',
-                  }}
-                >
-                  <div style={{ color: '#F26522', fontFamily: 'monospace', fontSize: '10px', fontWeight: 700 }}>
-                    {metric.key}
-                  </div>
-                  <div style={{ color: '#111827', fontSize: '14px', fontWeight: 700 }}>
-                    {scores[metric.key] > 0 ? '+' : ''}{scores[metric.key]}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Status Badge */}
-            <div style={{ textAlign: 'center', marginTop: 'auto' }}>
-              {isWinner ? (
-                <span 
-                  style={{ 
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    backgroundColor: 'rgba(34, 197, 94, 0.15)', 
-                    border: '1px solid rgba(34, 197, 94, 0.3)',
-                    borderRadius: '20px',
-                    padding: '6px 16px',
-                  }}
-                >
-                  <span style={{ color: '#16A34A', fontSize: '14px' }}>✓</span>
-                  <span style={{ color: '#16A34A', fontWeight: 600, fontSize: '12px' }}>
-                    Transformation Target Achieved
-                  </span>
-                </span>
-              ) : (
-                <span 
-                  style={{ 
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    backgroundColor: '#F3F4F6', 
-                    border: '1px solid #E5E7EB',
-                    borderRadius: '20px',
-                    padding: '6px 16px',
-                  }}
-                >
-                  <span style={{ color: '#6B7280', fontSize: '12px' }}>
-                    Strategy Simulation Completed
-                  </span>
-                </span>
-              )}
             </div>
           </div>
         </div>
@@ -303,7 +313,7 @@ export default function ShareCertificate({
             </svg>
             Download
           </motion.button>
-          
+
           <motion.button
             onClick={handleShare}
             whileHover={{ scale: 1.02 }}
@@ -315,7 +325,7 @@ export default function ShareCertificate({
             </svg>
             Share
           </motion.button>
-          
+
           <motion.button
             onClick={onClose}
             whileHover={{ scale: 1.02 }}
